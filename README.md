@@ -72,7 +72,7 @@ The browser reads the token from the cookie and sends it as the `x-api-key` head
 ## Features
 
 **Analysis**
-- Detects which account is yours (the sender appearing in the most conversations) and only flags your own messages, using the full conversation as context
+- Analyzes full conversation context to surface problematic content across your DM history
 - Unanswered contact detection: flags conversations where you sent messages with no reply (high: 5+, medium: 3–4, low: 2)
 - Batch mode for posts and comments (15 items per Bedrock call)
 - Sliding-window conversation mode for DMs (1 000 messages per call with a rolling summary passed between windows)
