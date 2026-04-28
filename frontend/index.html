@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Instagram Content Audit</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Upload -->
+  <div class="page" id="uploadSection">
+    <div class="hero">
+      <div class="badge">AI-Powered Privacy Tool</div>
+      <h1>Know what you've said.<br><span class="gradient-text">Take control.</span></h1>
+      <p class="hero-sub">Scan years of Instagram posts, comments, and messages to surface content you may want to remove — powered by Claude AI on AWS Bedrock.</p>
+    </div>
+
+    <div class="upload-card">
+      <div class="steps">
+        <div class="step"><span class="step-n">1</span><span>Instagram → Settings → <strong>Download your information</strong></span></div>
+        <div class="step"><span class="step-n">2</span><span>Select <strong>JSON</strong> format and request download</span></div>
+        <div class="step"><span class="step-n">3</span><span>Upload the <strong>.zip</strong> file below</span></div>
+      </div>
+
+      <div class="drop-zone" id="dropZone">
+        <div class="drop-icon" id="dropIcon">⬆</div>
+        <p class="drop-title" id="dropTitle">Drop your Instagram export here</p>
+        <p class="drop-hint" id="dropHint">or click to browse — .zip file only</p>
+        <input type="file" id="fileInput" accept=".zip" hidden />
+      </div>
+
+      <div class="privacy-note">🔒 Your data is processed through your own AWS account and never stored. Claude will store your content for 1 month, after which it is automatically deleted from their servers.</div>
+
+      
+      <div class="cost-estimate hidden" id="costEstimate"></div>
+
+      <button class="btn" id="analyzeBtn" disabled>Analyze my content</button>
+    </div>
+  </div>
+
+  <!-- Analysis progress -->
+  <div class="page hidden" id="analysisSection">
+    <div class="progress-header">
+      <h2>Analyzing your content</h2>
+      <p class="progress-status" id="analysisStatus">Starting...</p>
+    </div>
+    <div class="groups-list" id="groupProgress"></div>
+  </div>
+
+  <!-- Report -->
+  <div class="page hidden" id="reportSection">
+    <div class="report-header">
+      <h2>Your content report</h2>
+      <div class="summary-grid" id="reportSummary"></div>
+      <div class="export-btns">
+        <button class="btn-export" id="exportPdf">Download PDF</button>
+        <button class="btn-export" id="exportCsv">Download CSV</button>
+      </div>
+    </div>
+    <div class="filters" id="typeFilters">
+      <button class="filter-btn active" data-type="all">All types</button>
+      <button class="filter-btn" data-type="post">Posts & Reels</button>
+      <button class="filter-btn" data-type="comment">Comments</button>
+      <button class="filter-btn" data-type="direct message">Messages</button>
+    </div>
+    <div class="filters" id="severityFilters">
+      <button class="filter-btn active" data-severity="all">All severity</button>
+      <button class="filter-btn" data-severity="high">Critical</button>
+      <button class="filter-btn" data-severity="medium">Medium</button>
+      <button class="filter-btn" data-severity="low">Low</button>
+    </div>
+    <div class="results-list" id="reportList"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@zip.js/zip.js@2.7.44/dist/zip.min.js"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

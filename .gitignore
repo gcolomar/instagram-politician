@@ -1,0 +1,13 @@
+# CDK
+infrastructure/node_modules/
+infrastructure/cdk.out/
+infrastructure/dist/
+
+# Python
+lambda/__pycache__/
+lambda/login/__pycache__/
+**/__pycache__/
+*.pyc
+
+# macOS
+.DS_Store

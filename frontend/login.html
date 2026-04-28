@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Instagram Content Audit — Sign In</title>
+  <style>
+    :root {
+      --bg:      #0d0d12;
+      --surface: #16161f;
+      --border:  #2a2a3a;
+      --text:    #e8e8f0;
+      --muted:   #7878a0;
+      --accent1: #6c47ff;
+      --accent2: #00c2ff;
+      --high:    #ff4757;
+      --radius:  14px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 380px;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      border: 1px solid var(--accent2);
+      border-radius: 20px;
+      padding: 0.3rem 0.9rem;
+      margin-bottom: 1.25rem;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 0.4rem;
+      letter-spacing: -0.02em;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 0.875rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    input[type="password"] {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+      text-align: center;
+      letter-spacing: 0.15em;
+      margin-bottom: 0.75rem;
+    }
+
+    input[type="password"]:focus { border-color: var(--accent1); }
+    input[type="password"]::placeholder { letter-spacing: normal; color: var(--muted); }
+
+    .error {
+      font-size: 0.825rem;
+      color: var(--high);
+      margin-bottom: 0.75rem;
+      min-height: 1.2rem;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 0.9rem;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      letter-spacing: 0.01em;
+    }
+
+    .btn:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge">Private Access</div>
+    <h1>Know what you've said.<br><span class="gradient-text">Take control.</span></h1>
+    <p class="subtitle">Enter the access password to continue</p>
+
+    <input type="password" id="passwordInput" placeholder="Password" autocomplete="current-password" />
+    <p class="error" id="errorMsg"></p>
+    <button class="btn" id="submitBtn">Continue</button>
+  </div>
+
+  <script src="login-config.js"></script>
+  <script>
+    const input  = document.getElementById('passwordInput');
+    const btn    = document.getElementById('submitBtn');
+    const errMsg = document.getElementById('errorMsg');
+
+    async function attempt() {
+      const password = input.value;
+      if (!password) return;
+
+      btn.disabled = true;
+      btn.textContent = 'Signing in…';
+      errMsg.textContent = '';
+
+      try {
+        const res  = await fetch(LOGIN_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password }),
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          errMsg.textContent = 'Incorrect password';
+          input.value = '';
+          input.focus();
+          return;
+        }
+
+        document.cookie = `igaudit_session=${data.token}; path=/; max-age=86400; SameSite=Strict`;
+        window.location.replace('/');
+      } catch {
+        errMsg.textContent = 'Connection error — try again';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Continue';
+      }
+    }
+
+    btn.addEventListener('click', attempt);
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') attempt(); });
+    input.focus();
+  </script>
+</body>
+</html>

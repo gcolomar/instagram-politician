@@ -1,0 +1,21 @@
+{
+  "name": "instagram-politician-infrastructure",
+  "version": "0.1.0",
+  "bin": {
+    "infrastructure": "bin/app.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "cdk": "cdk"
+  },
+  "devDependencies": {
+    "aws-cdk": "2.176.0",
+    "typescript": "~5.6.3",
+    "@types/node": "22.13.5"
+  },
+  "dependencies": {
+    "aws-cdk-lib": "2.176.0",
+    "constructs": "^10.0.0"
+  }
+}
