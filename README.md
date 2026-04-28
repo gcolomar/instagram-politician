@@ -1,16 +1,16 @@
 # Instagram Content Audit
 
-Most people have years of Instagram history they've forgotten about like messages, comments, and posts that contain personal information, strong opinions, or content that could be embarrassing in a different context. If you ran for office tomorrow, **would you know what's sitting in your account?**
+Most people have years of Instagram history they've forgotten about: messages, comments, and posts that contain personal information, strong opinions, or content that could be embarrassing in a different context. If you ran for office tomorrow, **would you know what's sitting in your account?**
 
 This tool scans your full Instagram export and surfaces what's there, so you know what you're carrying. Everything runs on your own AWS account; no data is stored by the application.
 
 ## Screenshots
 
-**Analysis in progress** — 146,367 items analyzed across posts, comments, and 1,065 DM conversations in parallel, with flagged counts updating in real time.
+**Analysis in progress** - 146,367 items analyzed across posts, comments, and 1,065 DM conversations in parallel, with flagged counts updating in real time.
 
 ![Analysis in progress](docs/screenshot-analysis.png)
 
-**Content report** — flagged items sorted by severity, filterable by type and severity, with PDF and CSV export.
+**Content report** - flagged items sorted by severity, filterable by type and severity, with PDF and CSV export.
 
 ![Content report](docs/screenshot-report.png)
 
@@ -19,12 +19,12 @@ This tool scans your full Instagram export and surfaces what's there, so you kno
 ```
 Browser
   │
-  │  zip.js — streaming ZIP parser
+  │  zip.js - streaming ZIP parser
   │  Media files are never loaded into memory; only JSON is read
   │
   ├─► CloudFront  (HTTPS, global CDN)
   │       │
-  │       │  Lambda@Edge (Node.js 22) — viewer request
+  │       │  Lambda@Edge (Node.js 22) - viewer request
   │       │  Checks igaudit_session cookie on every request
   │       │  Redirects to /login.html if missing or invalid
   │       │  /login.html and /login-config.js are public (no auth required)
@@ -46,8 +46,8 @@ Browser
                               Prompt caching on system prompts (cache_control: ephemeral)
 
                               Two analysis modes:
-                              ├─ Batch       posts & comments — 15 items per call
-                              └─ Conversation DMs — 1 000-message sliding window
+                              ├─ Batch       posts & comments, 15 items per call
+                              └─ Conversation DMs, 1 000-message sliding window
                                               + rolling summary for continuity
 ```
 
@@ -63,9 +63,9 @@ sessionToken = HMAC-SHA256(edgePassword, "igaudit-session")
 ```
 
 This token is used in three places:
-1. **Lambda@Edge** — the expected value for the `igaudit_session` cookie
-2. **Login Lambda** — returned to the browser after a correct password is entered
-3. **API Gateway key** — the value of the API key required on `POST /analyze`
+1. **Lambda@Edge**: the expected value for the `igaudit_session` cookie
+2. **Login Lambda**: returned to the browser after a correct password is entered
+3. **API Gateway key**: the value of the API key required on `POST /analyze`
 
 The browser reads the token from the cookie and sends it as the `x-api-key` header. The key is never written to any file in the repository.
 
@@ -73,24 +73,24 @@ The browser reads the token from the cookie and sends it as the `x-api-key` head
 
 **Analysis**
 - Analyzes full conversation context to surface problematic content across your DM history
-- Unanswered contact detection: flags conversations where you sent messages with no reply (high: 5+, medium: 3–4, low: 2)
+- Unanswered contact detection: flags conversations where you sent messages with no reply (high: 5+, medium: 3-4, low: 2)
 - Batch mode for posts and comments (15 items per Bedrock call)
 - Sliding-window conversation mode for DMs (1 000 messages per call with a rolling summary passed between windows)
 - 5 DM conversations analyzed in parallel to reduce total runtime
 
 **Frontend**
-- Streaming ZIP parser — photos and videos are skipped entirely; only JSON files are read
+- Streaming ZIP parser: photos and videos are skipped entirely; only JSON files are read
 - Live results appear sorted by severity as analysis runs (no waiting for the full scan)
 - Filter results by content type (Posts & Reels / Comments / Messages) and severity (Critical / Medium / Low)
 - Cost estimate shown before analysis starts
 - Browser notification + sound when the scan finishes (works while the tab is minimized)
-- Results cached in localStorage for 48 hours — refreshing the page restores the report without re-running
-- PDF export (jsPDF, loaded lazily — does not affect page load time; generated locally, nothing sent externally)
+- Results cached in localStorage for 48 hours; refreshing the page restores the report without re-running
+- PDF export (jsPDF, loaded lazily; does not affect page load time; generated locally, nothing sent externally)
 - CSV export (UTF-8 BOM, opens correctly in Excel)
 
 **Observability**
 - X-Ray active tracing on both Lambdas (Analyzer and Login)
-- CloudWatch alarm: fires when the Analyzer Lambda logs ≥ 5 errors in a 5-minute window
+- CloudWatch alarm: fires when the Analyzer Lambda logs >= 5 errors in a 5-minute window
 
 ## Deploy
 
@@ -110,7 +110,7 @@ The browser reads the token from the cookie and sends it as the `x-api-key` head
 cd infrastructure
 npm install
 
-# First deploy only — bootstraps the CDK staging bucket
+# First deploy only, bootstraps the CDK staging bucket
 AWS_PROFILE=your-profile cdk bootstrap --context edgePassword=YOUR_PASSWORD
 
 # Deploy
@@ -148,7 +148,7 @@ The S3 bucket and all its contents are deleted automatically (`RemovalPolicy.DES
 1. Instagram → **Settings** → **Your activity on Instagram** → **Download your information**
 2. Select **JSON** format and request the download
 3. Instagram will email you a link within 48 hours
-4. Upload the `.zip` directly to the app — no need to unzip
+4. Upload the `.zip` directly to the app, no need to unzip
 
 ## Cost estimate
 
@@ -156,7 +156,7 @@ All charges go to your own AWS account.
 
 | Service | Cost |
 |---|---|
-| Bedrock — Claude Haiku 4.5 | $0.25 / 1M input tokens · $1.25 / 1M output tokens |
+| Bedrock (Claude Haiku 4.5) | $0.25 / 1M input tokens · $1.25 / 1M output tokens |
 | Lambda (Analyzer + Login) | First 1M requests / month free |
 | Lambda@Edge | First 1M requests / month free |
 | API Gateway | First 1M calls / month free |
