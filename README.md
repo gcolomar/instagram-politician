@@ -1,6 +1,6 @@
 # Instagram Content Audit
 
-Most people have years of Instagram history they've forgotten about — messages, comments, and posts that contain personal information, strong opinions, or content that could be embarrassing in a different context. If you ran for office tomorrow, would you know what's sitting in your account?
+Most people have years of Instagram history they've forgotten about like messages, comments, and posts that contain personal information, strong opinions, or content that could be embarrassing in a different context. If you ran for office tomorrow, **would you know what's sitting in your account?**
 
 This tool scans your full Instagram export and surfaces what's there, so you know what you're carrying. Everything runs on your own AWS account; no data is stored by the application.
 
