@@ -2,6 +2,16 @@
 
 An AI-powered privacy tool that scans your Instagram data export — posts, reels, comments, and direct messages — and flags content you may want to review or delete. Everything runs on your own AWS account; no data is stored by the application.
 
+## Screenshots
+
+**Analysis in progress** — 146,367 items analyzed across posts, comments, and 1,065 DM conversations in parallel, with flagged counts updating in real time.
+
+![Analysis in progress](docs/screenshot-analysis.png)
+
+**Content report** — flagged items sorted by severity, filterable by type and severity, with PDF and CSV export.
+
+![Content report](docs/screenshot-report.png)
+
 ## Architecture
 
 ```
