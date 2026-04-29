@@ -6,7 +6,7 @@ This tool scans your full Instagram export and surfaces what's there, so you kno
 
 ## Demo
 
-![Demo](docs/demo.gif)
+![Demo](docs/instagram-politician-demo.gif)
 
 ## Architecture
 
