@@ -4,52 +4,13 @@ Most people have years of Instagram history they've forgotten about: messages, c
 
 This tool scans your full Instagram export and surfaces what's there, so you know what you're carrying. Everything runs on your own AWS account; no data is stored by the application.
 
-## Screenshots
+## Demo
 
-**Analysis in progress** - 146,367 items analyzed across posts, comments, and 1,065 DM conversations in parallel, with flagged counts updating in real time.
-
-![Analysis in progress](docs/screenshot-analysis.png)
-
-**Content report** - flagged items sorted by severity, filterable by type and severity, with PDF and CSV export.
-
-![Content report](docs/screenshot-report.png)
+![Demo](docs/instagram-politician-video.gif)
 
 ## Architecture
 
-```
-Browser
-  │
-  │  zip.js - streaming ZIP parser
-  │  Media files are never loaded into memory; only JSON is read
-  │
-  ├─► CloudFront  (HTTPS, global CDN)
-  │       │
-  │       │  Lambda@Edge (Node.js 22) - viewer request
-  │       │  Checks igaudit_session cookie on every request
-  │       │  Redirects to /login.html if missing or invalid
-  │       │  /login.html and /login-config.js are public (no auth required)
-  │       ▼
-  │      S3  (private bucket, Origin Access Control)
-  │      Static frontend: index.html · app.js · style.css · login.html
-  │      config.js and login-config.js are injected by CDK at deploy time
-  │
-  ├─► POST /login    API Gateway → Login Lambda (Python 3.12)
-  │                  Validates password, returns session token
-  │                  CORS restricted to the CloudFront origin only
-  │
-  └─► POST /analyze  API Gateway → Analyzer Lambda (Python 3.12)
-      (API key req.)              256 MB · 60 s timeout · X-Ray tracing
-                                  ↓
-                              Bedrock  (Claude Haiku 4.5)
-                              Cross-region inference profile
-                              us.anthropic.claude-haiku-4-5-20251001-v1:0
-                              Prompt caching on system prompts (cache_control: ephemeral)
-
-                              Two analysis modes:
-                              ├─ Batch       posts & comments, 15 items per call
-                              └─ Conversation DMs, 1 000-message sliding window
-                                              + rolling summary for continuity
-```
+![Architecture](docs/instagram-politician-architecture.png)
 
 **AWS services:** S3 · CloudFront · Lambda · Lambda@Edge · API Gateway · Bedrock · IAM · CloudWatch · X-Ray · CDK (TypeScript)
 
@@ -149,6 +110,8 @@ The S3 bucket and all its contents are deleted automatically (`RemovalPolicy.DES
 2. Select **JSON** format and request the download
 3. Instagram will email you a link within 48 hours
 4. Upload the `.zip` directly to the app, no need to unzip
+
+A sample export with fictional data is available at [docs/demo_export.zip](docs/demo_export.zip) if you want to try the app without using your own account.
 
 ## Cost estimate
 
