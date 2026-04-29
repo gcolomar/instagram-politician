@@ -6,11 +6,12 @@ This tool scans your full Instagram export and surfaces what's there, so you kno
 
 ## Demo
 
-![Demo](docs/instagram-politician-video.gif)
+![Demo](docs/demo.gif)
 
 ## Architecture
 
 ![Architecture](docs/instagram-politician-architecture.png)
+
 
 **AWS services:** S3 · CloudFront · Lambda · Lambda@Edge · API Gateway · Bedrock · IAM · CloudWatch · X-Ray · CDK (TypeScript)
 
